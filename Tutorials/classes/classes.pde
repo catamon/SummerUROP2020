@@ -5,7 +5,7 @@ Car[] cars = new Car[256];
 void setup(){
   size(1000,1000);
   for (int i= 0; i <255; i = i+1) {
-    cars[i] = new Car(color(i, 255 -i, 0), 0, 0, i, i);
+    cars[i] = new Car(color(i, 255 -i, 0), 0, 0, 10, 10);
   }
 }
 
