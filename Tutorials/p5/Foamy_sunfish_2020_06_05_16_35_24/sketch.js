@@ -12,6 +12,12 @@ function draw() {
 
     if (keyIsPressed) {
       noFill();
+      if (key == "b"){
+        fill(0,0,255, 128);
+      }
+      if (key == "r"){
+        fill(255,0,0,128);
+      }
     }
     rectMode(CENTER);
     rect(mouseX,mouseY,80,80);
