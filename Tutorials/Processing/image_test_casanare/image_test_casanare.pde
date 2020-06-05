@@ -23,13 +23,36 @@ void draw(){
     float g_cab = green(cabo.pixels[loc]);
     float b_cab = blue(cabo.pixels[loc]);
     
-    float r_comb = (r_cas+r_cab)/2;
-    float g_comb = (g_cas+g_cab)/2;
-    float b_comb = (b_cas+b_cab)/2;
-    
+    if (keyPressed == false){
+      float r_comb = (r_cas+r_cab)/2;
+      float g_comb = (g_cas+g_cab)/2;
+      float b_comb = (b_cas+b_cab)/2;
+    }
+    else {
+      if (r_cas<128){
+        float r_comb = 0;
+      }
+      else {
+        float r_comb = 255;
+      }
+      if (g_cas<128){
+        float g_comb = 0;
+      }
+      else {
+        float g_comb = 255;
+      }
+      if (b_cas<128){
+        float b_comb = 0;
+      }
+      else {
+        float b_comb = 255;
+      }
+      }
     comb.pixels[loc] = color(r_comb, g_comb, b_comb);
-  }
+      }
+      
   image(comb,0,0,1000,666);
+    
 }
 
 void mousePressed(){
