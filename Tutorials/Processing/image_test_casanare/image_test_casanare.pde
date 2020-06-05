@@ -50,6 +50,7 @@ void draw(){
       }
     comb.pixels[loc] = color(r_comb, g_comb, b_comb);
       }
+  comb.updatePixels();
       
   image(comb,0,0,1000,666);
     
