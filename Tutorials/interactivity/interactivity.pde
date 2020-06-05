@@ -15,6 +15,7 @@ void draw(){
   textSize(15);
   fill(h,255,255);
   noStroke();
+  cursor(TEXT);
   if (mousePressed == true){
     ellipse(mouseX, mouseY, 10, 10);
     h += 1;
@@ -33,5 +34,5 @@ void draw(){
 void mousePressed(){
   positionX = mouseX;
   positionY = mouseY;
-  saveFrame("interactive_drawing_2.png");
+  saveFrame("interactive_drawing_3.png");
 }
