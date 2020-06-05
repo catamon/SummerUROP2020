@@ -22,5 +22,19 @@ function draw() {
     rectMode(CENTER);
     rect(mouseX,mouseY,80,80);
   }
+}
+function mouseReleased(){
+  textSize(20);
+  fill(0);
+  text("the colour is yellow", pmouseX, pmouseY);
+}
 
+function mouseOut(){
+  background(255,255,0);
+  textSize(30);
+  fill(0);
+  text("GO BACK TO THE SCREEN!", 10,200);
+}
+function doubleClicked(){
+  saveCanvas("flag.png");
 }
