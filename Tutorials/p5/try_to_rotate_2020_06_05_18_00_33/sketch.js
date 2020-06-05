@@ -11,8 +11,9 @@ function draw() {
   background(255);
   rectMode(CENTER);
   fill(0,0,255, 255-w*3/2);
-
   rect(200,200,w,100);
+  fill(0,255,0,105+w*3/2);
+  rect(200,200,100-w,100);
 
   if (doing == "dec"){
     w -=1;
