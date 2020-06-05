@@ -26,6 +26,9 @@ void draw(){
     float r_comb;
     float g_comb;
     float b_comb;
+    float r_try;
+    float g_try;
+    float b_try;
     
     if (keyPressed == false){
       r_comb = (r_cas+r_cab)/2;
@@ -34,19 +37,29 @@ void draw(){
       comb.pixels[loc] = color(r_comb, g_comb, b_comb);
     }
     else {
-      if (r_cas<128){
+      if (key == 'a') {
+        r_try = r_cab;
+        g_try = g_cab;
+        b_try = b_cab;
+      }
+      else {
+        r_try = r_cas;
+        g_try = g_cas;
+        b_try = b_cas;
+      }
+      if (r_try<128){
         r_comb = 0;
       }
       else {
         r_comb = 255;
       }
-      if (g_cas<128){
+      if (g_try<128){
         g_comb = 0;
       }
       else {
         g_comb = 255;
       }
-      if (b_cas<128){
+      if (b_try<128){
         b_comb = 0;
       }
       else {
@@ -63,10 +76,9 @@ void draw(){
 
 void keyPressed(){
   redraw();
-  saveFrame("brightness_test.png");
+  saveFrame("brightness_test2.png");
 }
 
 void mousePressed(){
-  redraw();
-  saveFrame("doble_image.jpg");
+  saveFrame("new_image.jpg");
 }
