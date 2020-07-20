@@ -56,8 +56,9 @@ def apply_per_pixel(image, func):
     result["pixels"] = pixel_list #modify the value of pixel_list in the dictionary
     return result
 
-def inverted(image, n = None):
+def inverted(image, n, q):
     return apply_per_pixel(image, lambda c: 255-c) #changed 256 to 255
+
 
 # HELPER FUNCTIONS
 
@@ -158,7 +159,7 @@ def blur_kernel(n):
         kernel.append(value_per_pixel)
     return kernel
 
-def blurred(image, n):
+def blurred(image, n, q):
     """
     Return a new image representing the result of applying a box blur (with
     kernel size n) to the given input image.
@@ -171,7 +172,7 @@ def blurred(image, n):
     new_image = round_and_clip_image(unrounded_image)    
     return new_image
 
-def sharpened(image, n):
+def sharpened(image, n, q):
     ''' returns an image with the specifications of 5.2 of the assignment
     i is the original pixels and b are the blurred pixels
     '''
@@ -188,7 +189,7 @@ def sharpened(image, n):
     new_image = round_and_clip_image(unrounded_image)    
     return new_image
 
-def edges(image, n = None):
+def edges(image, n, q):
     ''' returns an image with the especifications of part 6 of the assignment 
     uses two kernels, k_x and k_y, specified below.'''
     k_x = [-1,0,1,-2,0,2,-1,0,1]
@@ -215,7 +216,7 @@ def color_filter_from_greyscale_filter(filt):
     greyscale image as output, returns a function that takes a color image as
     input and produces the filtered color image.
     """
-    def color_function (image, n = None):
+    def color_function (image, n, q):
         ''' Input is a 6.009 colour image, with height, width and pixel in a list,
         each made of a tuple of the value of red, green and blue they have, a value
         between 0 and 255
@@ -236,11 +237,11 @@ def color_filter_from_greyscale_filter(filt):
         red_image_dict = {"height": image["height"], "width": image["width"], "pixels": red_image}
         green_image_dict = {"height": image["height"], "width": image["width"], "pixels": green_image}
         blue_image_dict = {"height": image["height"], "width": image["width"], "pixels": blue_image}
-        new_red_dict = filt(red_image_dict, n)
+        new_red_dict = filt(red_image_dict, n, q)
         new_red = new_red_dict["pixels"]
-        new_green_dict = filt(green_image_dict, n)
+        new_green_dict = filt(green_image_dict, n, q)
         new_green = new_green_dict["pixels"]
-        new_blue_dict = filt(blue_image_dict, n)
+        new_blue_dict = filt(blue_image_dict, n, q)
         new_blue = new_blue_dict["pixels"]
         # The new images correspond to the altered values, they are a dictionary with the same width and height
         # of the original image, but the pixel values of each list (for each colour) are altered by the filter.
@@ -458,6 +459,30 @@ def color_switch(im, p, q):
     new_image = {"height": im["height"], "width": im["width"], "pixels": pixel_copy}
     return new_image
 
+def color_oversaturation(im, p, q):
+    ''' Function created in July 2020 for UROP'''
+    pixel_list = im["pixels"]
+    pixel_copy = []
+    for pix in pixel_list:
+        r = pix[0]
+        g = pix[1]
+        b = pix[2]
+        if r < 128:
+            new_r = 0
+        else:
+            new_r = 255
+        if g < 128:
+            new_g = 0
+        else:
+            new_g = 255
+        if b < 128:
+            new_b = 0
+        else:
+            new_b = 255
+        pixel_copy.append((new_r, new_g, new_b))
+    new_image = {"height": im["height"], "width": im["width"], "pixels": pixel_copy}
+    return new_image
+    
 
 def load_color_image(filename):
     """
@@ -498,21 +523,21 @@ def save_image(image, filename, mode='PNG'):
 import os
 import winsound
 
-def multiple_image_filter(event, filter_, mode = "PNG"):
+def multiple_image_filter(event, filter_, filter_name, p, q, mode = "PNG"):
     ''' Given an event folder and a mode of an image, I modify this function to run a specific function in all
     of the images in that event folder
     '''
 
     #CHANGE THIS SECTION ACCORDING TO THE FILTER I WANT TO APPLY
     
-    # filter_name = "color_switch"
-    # p = "b"
-    # q = "r"
-    # vars_str = "_" + p + "_" + q
+    vars_str = ""
+    if p != None:
+        vars_str += "_" + p
+    if q != None:
+        vars_str += "_" + q
 
-    filter_name = "sharpened"
-    p = 5
-    vars_str = "_" + str(p)
+    # filter_name = "color_oversaturation"
+    # vars_str = ""
 
     # to load
     images_names = os.listdir(event+"/originals")
@@ -529,17 +554,18 @@ def multiple_image_filter(event, filter_, mode = "PNG"):
     # loop through every image in directory_o
     n = 0
     for image_name in images_names:
-        print(str(n) + "/" + str(len(images_names)) + " images processed and saved")
+        if (filter_name != "blurred" and filter_name != "sharpened") or n < 6:
+            print(str(n) + "/" + str(len(images_names)) + " images processed and saved")
+            #load
+            image_original = load_color_image(directory_o + image_name)
+
+            #process #ALSO CHANGES DEPENDING ON THE FILTER
+            image_processed = filter_(image_original, p, q)
+
+            #save
+            filename = directory_p + image_name
+            save_image(image_processed, filename, mode) #change color if needed in greyscale
         n += 1
-        #load
-        image_original = load_color_image(directory_o + image_name)
-
-        #process #ALSO CHANGES DEPENDING ON THE FILTER
-        image_processed = filter_(image_original, p)
-
-        #save
-        filename = directory_p + image_name
-        save_image(image_processed, filename, mode) #change color if needed in greyscale
     print("Done. All images processed and saved")
     
 
@@ -548,9 +574,31 @@ def multiple_image_filter(event, filter_, mode = "PNG"):
 
 
 
-event = "Carnaval de Negros y Blancos"
-filter_ = color_filter_from_greyscale_filter(sharpened)
-multiple_image_filter(event, filter_)
+event = "Dia de las Velitas"
+# multiple_image_filter(event, color_switch, "color_switch", "g", "b")
+# multiple_image_filter(event, color_switch, "color_switch", "b", "r")
+# multiple_image_filter(event, color_filter_from_greyscale_filter(inverted), "inverted", None, None)
+edges_ = color_filter_from_greyscale_filter(edges)
+multiple_image_filter(event, edges_, "edges", None, None)
+sharpened_ = color_filter_from_greyscale_filter(sharpened)
+blurred_ = color_filter_from_greyscale_filter(blurred)
+multiple_image_filter(event, sharpened_, "sharpened", 5, None)
+multiple_image_filter(event, sharpened_, "sharpened", 9, None)
+multiple_image_filter(event, blurred_, "blurred", 7, None)
+multiple_image_filter(event, blurred_, "blurred", 15, None)
+
+event = "Carnaval de Barranquilla"
+multiple_image_filter(event, sharpened_, "sharpened", 5, None)
+multiple_image_filter(event, sharpened_, "sharpened", 9, None)
+multiple_image_filter(event, blurred_, "blurred", 7, None)
+multiple_image_filter(event, blurred_, "blurred", 15, None)
+
+event = "Carnaval de Blancos y Negros"
+multiple_image_filter(event, blurred_, "blurred", 15, None)
+
+
+
+
 winsound.Beep(380, 2000)
 
 
