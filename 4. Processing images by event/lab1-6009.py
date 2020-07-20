@@ -1,8 +1,14 @@
+
+
 #!/usr/bin/env python3
 
 import math
 
 from PIL import Image
+
+
+## The following code is by submittion for lab 0 and lab 1 of 6.009. I will use it to create filters
+## Ideally I will translate this to Java/Processing or Javascript/P5.
 
 #LAB0 CODE
 
@@ -50,7 +56,7 @@ def apply_per_pixel(image, func):
     result["pixels"] = pixel_list #modify the value of pixel_list in the dictionary
     return result
 
-def inverted(image):
+def inverted(image, n = None):
     return apply_per_pixel(image, lambda c: 255-c) #changed 256 to 255
 
 # HELPER FUNCTIONS
@@ -182,7 +188,7 @@ def sharpened(image, n):
     new_image = round_and_clip_image(unrounded_image)    
     return new_image
 
-def edges(image):
+def edges(image, n = None):
     ''' returns an image with the especifications of part 6 of the assignment 
     uses two kernels, k_x and k_y, specified below.'''
     k_x = [-1,0,1,-2,0,2,-1,0,1]
@@ -209,7 +215,7 @@ def color_filter_from_greyscale_filter(filt):
     greyscale image as output, returns a function that takes a color image as
     input and produces the filtered color image.
     """
-    def color_function (image):
+    def color_function (image, n = None):
         ''' Input is a 6.009 colour image, with height, width and pixel in a list,
         each made of a tuple of the value of red, green and blue they have, a value
         between 0 and 255
@@ -230,11 +236,11 @@ def color_filter_from_greyscale_filter(filt):
         red_image_dict = {"height": image["height"], "width": image["width"], "pixels": red_image}
         green_image_dict = {"height": image["height"], "width": image["width"], "pixels": green_image}
         blue_image_dict = {"height": image["height"], "width": image["width"], "pixels": blue_image}
-        new_red_dict = filt(red_image_dict)
+        new_red_dict = filt(red_image_dict, n)
         new_red = new_red_dict["pixels"]
-        new_green_dict = filt(green_image_dict)
+        new_green_dict = filt(green_image_dict, n)
         new_green = new_green_dict["pixels"]
-        new_blue_dict = filt(blue_image_dict)
+        new_blue_dict = filt(blue_image_dict, n)
         new_blue = new_blue_dict["pixels"]
         # The new images correspond to the altered values, they are a dictionary with the same width and height
         # of the original image, but the pixel values of each list (for each colour) are altered by the filter.
@@ -428,7 +434,7 @@ def seam_carving(image, ncols):
 
 # HELPER FUNCTIONS FOR LOADING AND SAVING COLOR IMAGES
 
-def color_switch(im,p,q):
+def color_switch(im, p, q):
     ''' Given an image, it returns an image and two letters p,q which have to be either r, g or b
     it returns an image with the rgb values of those two letters switched.
     '''
@@ -441,6 +447,7 @@ def color_switch(im,p,q):
             v2 = 2
         if p == "b" or q == "b":
             v0 = 2
+            v1 = 1
             v2 = 0
     else:
         v0 = 0
@@ -469,14 +476,15 @@ def load_color_image(filename):
         return {'height': h, 'width': w, 'pixels': pixels}
 
 
-def save_color_image(image, filename, mode='PNG'):
+def save_image(image, filename, mode='PNG'):
     """
     Saves the given color image to disk or to a file-like object.  If filename
     is given as a string, the file type will be inferred from the given name.
     If filename is given as a file-like object, the file type will be
     determined by the 'mode' parameter.
     """
-    out = Image.new(mode='RGB', size=(image['width'], image['height']))
+    out = Image.new(mode= "RGB", size=(image['width'], image['height']))
+    # Change RGB to L if image needs to be saved in greyscale
     out.putdata(image['pixels'])
     if isinstance(filename, str):
         out.save(filename)
@@ -485,14 +493,65 @@ def save_color_image(image, filename, mode='PNG'):
     out.close()
 
 
-if __name__ == '__main__':
-    # code in this block will only be run when you explicitly run your script,
-    # and not when the tests are being run.  this is a good place for
-    # generating images, etc.
+# Anything under this is code not from 6.009 bu for the UROP, other changes to function variables, user inputs,
+# and return values have been changed from the code above
+import os
+import winsound
 
+def multiple_image_filter(event, filter_, mode = "PNG"):
+    ''' Given an event folder and a mode of an image, I modify this function to run a specific function in all
+    of the images in that event folder
+    '''
+
+    #CHANGE THIS SECTION ACCORDING TO THE FILTER I WANT TO APPLY
     
-    image = load_color_image("lab1/lab1/test_images/frog.png")
-    im = color_switch(image,"r","g")
+    # filter_name = "color_switch"
+    # p = "b"
+    # q = "r"
+    # vars_str = "_" + p + "_" + q
+
+    filter_name = "sharpened"
+    p = 5
+    vars_str = "_" + str(p)
+
+    # to load
+    images_names = os.listdir(event+"/originals")
+    directory_o = event + "/originals/"
+
+    #to save
+    directory_p = event +"/"+ filter_name + vars_str + "/"
+    try:
+        os.makedirs(directory_p)
+    except:
+        pass
 
 
-    save_color_image(im, "lab1/lab1/test_images/b3luefrog.png")
+    # loop through every image in directory_o
+    n = 0
+    for image_name in images_names:
+        print(str(n) + "/" + str(len(images_names)) + " images processed and saved")
+        n += 1
+        #load
+        image_original = load_color_image(directory_o + image_name)
+
+        #process #ALSO CHANGES DEPENDING ON THE FILTER
+        image_processed = filter_(image_original, p)
+
+        #save
+        filename = directory_p + image_name
+        save_image(image_processed, filename, mode) #change color if needed in greyscale
+    print("Done. All images processed and saved")
+    
+
+
+
+
+
+
+event = "Carnaval de Negros y Blancos"
+filter_ = color_filter_from_greyscale_filter(sharpened)
+multiple_image_filter(event, filter_)
+winsound.Beep(380, 2000)
+
+
+
