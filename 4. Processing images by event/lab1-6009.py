@@ -532,9 +532,9 @@ def multiple_image_filter(event, filter_, filter_name, p, q, mode = "PNG"):
     
     vars_str = ""
     if p != None:
-        vars_str += "_" + p
+        vars_str += "_" + str(p)
     if q != None:
-        vars_str += "_" + q
+        vars_str += "_" + str(q)
 
     # filter_name = "color_oversaturation"
     # vars_str = ""
@@ -578,8 +578,8 @@ event = "Dia de las Velitas"
 # multiple_image_filter(event, color_switch, "color_switch", "g", "b")
 # multiple_image_filter(event, color_switch, "color_switch", "b", "r")
 # multiple_image_filter(event, color_filter_from_greyscale_filter(inverted), "inverted", None, None)
-edges_ = color_filter_from_greyscale_filter(edges)
-multiple_image_filter(event, edges_, "edges", None, None)
+# edges_ = color_filter_from_greyscale_filter(edges)
+# multiple_image_filter(event, edges_, "edges", None, None)
 sharpened_ = color_filter_from_greyscale_filter(sharpened)
 blurred_ = color_filter_from_greyscale_filter(blurred)
 multiple_image_filter(event, sharpened_, "sharpened", 5, None)
