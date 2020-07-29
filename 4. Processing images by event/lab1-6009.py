@@ -582,18 +582,18 @@ event = "Dia de las Velitas"
 # multiple_image_filter(event, edges_, "edges", None, None)
 sharpened_ = color_filter_from_greyscale_filter(sharpened)
 blurred_ = color_filter_from_greyscale_filter(blurred)
-multiple_image_filter(event, sharpened_, "sharpened", 5, None)
-multiple_image_filter(event, sharpened_, "sharpened", 9, None)
-multiple_image_filter(event, blurred_, "blurred", 7, None)
-multiple_image_filter(event, blurred_, "blurred", 15, None)
+# multiple_image_filter(event, sharpened_, "sharpened", 5, None)
+# multiple_image_filter(event, sharpened_, "sharpened", 9, None)
+# multiple_image_filter(event, blurred_, "blurred", 7, None)
+# multiple_image_filter(event, blurred_, "blurred", 15, None)
 
-event = "Carnaval de Barranquilla"
-multiple_image_filter(event, sharpened_, "sharpened", 5, None)
-multiple_image_filter(event, sharpened_, "sharpened", 9, None)
-multiple_image_filter(event, blurred_, "blurred", 7, None)
-multiple_image_filter(event, blurred_, "blurred", 15, None)
+# event = "Carnaval de Barranquilla"
+# multiple_image_filter(event, sharpened_, "sharpened", 5, None)
+# multiple_image_filter(event, sharpened_, "sharpened", 9, None)
+# multiple_image_filter(event, blurred_, "blurred", 7, None)
+# multiple_image_filter(event, blurred_, "blurred", 15, None)
 
-event = "Carnaval de Blancos y Negros"
+event = "Carnaval de Negros y Blancos"
 multiple_image_filter(event, blurred_, "blurred", 15, None)
 
 
