@@ -4,6 +4,7 @@ import de.fhpotsdam.unfolding.geo.*;
 import de.fhpotsdam.unfolding.marker.*;
 import de.fhpotsdam.unfolding.utils.*;
 import java.util.*;
+import de.fhpotsdam.unfolding.data.Feature;
 
 Place[] countriesData;
 
@@ -41,6 +42,7 @@ void setup() {
   List countryMarkers = MapUtils.createSimpleMarkers(countries);
   map.addMarkers(countryMarkers);
   ScreenPosition pos = map.getScreenPosition(countriesData[0].loc);
+  
 }
 
 void draw() {
