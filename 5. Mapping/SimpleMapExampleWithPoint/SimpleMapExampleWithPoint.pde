@@ -14,13 +14,13 @@ import java.util.*;
 
 UnfoldingMap map;
 List countryMarkers = new ArrayList();
-Location mexicoCity = new Location(19.411312, -99.102534);
+Location indonesiaLocation = new Location(-6.175, 106.82);
 
 void setup() {
   size(800, 600, P2D);
 
   map = new UnfoldingMap(this);
-  map.zoomAndPanTo(mexicoCity, 3);
+  map.zoomAndPanTo(indonesiaLocation, 3);
   MapUtils.createDefaultEventDispatcher(this, map);
 
   List countries = GeoJSONReader.loadData(this, "countries.geo.json");
@@ -33,10 +33,9 @@ void draw() {
   map.draw();
 
   // Shows marker at Berlin location
-  Location loc = new Location(19.411312, -99.102534);
+  Location loc = new Location(52.5f, 13.4f);
   ScreenPosition pos = map.getScreenPosition(loc);
-  fill(0);
-  ellipse(pos.x, pos.y, 5, 5);
+  ellipse(pos.x, pos.y, 20, 20);
 }
 
 void mouseMoved() {
