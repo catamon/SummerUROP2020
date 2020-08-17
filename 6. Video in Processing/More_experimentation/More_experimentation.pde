@@ -1,42 +1,51 @@
 import gab.opencv.*;
-impor processing.video.*;
+import processing.video.*;
 
 OpenCV opencv;
 Capture video;
 PImage src, canny, scharr, sobel;
+ArrayList<Contour> contours;
+int hue = 0;
 
 void captureEvent(Capture video){
   video.read();
 }
 
-void setup(){
+void setup() {
   video = new Capture(this, 640, 480);
-  size(64', 480);
+  size(640, 480);
   video.start();
   opencv = new OpenCV(this, video);
+  colorMode(HSB);
 }
 
 void draw(){
-  opencv.findCannyEdges(20,75);
-  canny = opencv.getSnapshot();
-  
+  background(0);
   opencv.loadImage(video);
-  opencv.findScharrEdges(OpenCV.HORIZONTAL);
-  scharr = opencv.getSnapshot();
   
-  opencv.loadImage(video);
-  opencv.findSobelEdges(1,0);
-  sobel = opencv.getSnapshot();
-  pushMatrix();
-  scale(0.5);
-  image(video, 0, 0);
-  image(canny, src.width, 0);
-  image(scharr, 0, src.height);
-  image(sobel, src.width, src.height);
-  popMatrix();
-
-  text("Source", 10, 25); 
-  text("Canny", video.width/2 + 10, 25); 
-  text("Scharr", 10, video.height/2 + 25); 
-  text("Sobel", video.width/2 + 10, video.height/2 + 25);
+  opencv.gray();
+  opencv.threshold(127);
+  //image(opencv.getOutput(),0,0);
+  contours = opencv.findContours();
+    
+noFill();
+  strokeWeight(2);
+  
+  for (Contour contour : contours) {
+    stroke(255);
+    contour.draw();
+    
+    
+    beginShape();
+    for (PVector point : contour.getPolygonApproximation().getPoints()) {
+        if (hue == 255){
+    hue = 0;
+  }
+      stroke(hue, 255, 255);
+      vertex(point.x, point.y);
+      hue++;
+    }
+    endShape();
+  }
+  
 }

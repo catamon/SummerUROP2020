@@ -1,5 +1,7 @@
-void quant(int posx, int posy, float scale){
-  int factor = 4;
+int factor = 4;
+
+void quant(int factor){
+  colorMode(RGB);
   strokeWeight(1);
   background(0);
   video.loadPixels();
