@@ -4,9 +4,10 @@ import gab.opencv.*;
 
 Capture video;
 OpenCV opencv;
-String filter = "null";
+String filter = "NULL";
 int sqWidth;
-Effect effect;
+Effect none;
+Effect q;
 
 
 void captureEvent (Capture video) {
@@ -25,13 +26,29 @@ void setup() {
 }
 
 void draw() {
+  none = new Effect(filter);
   controlScreen();
+  //getCenter(filter);
+  
 }
 
 void mousePressed() {
   if ((660 < mouseX) && (mouseX < 960)) {
     if ((80 < mouseY) && (mouseY < 140)) {
-      effect = new Effect("BRIGHTNESS");
+      filter = "BRIGHTNESS";
     }
+    if ((160 < mouseY) && (mouseY < 220)) {
+      filter = "CIRCLES";
+    }
+    if ((240 < mouseY) && (mouseY < 300)) {
+      filter = "CONTOURS";
+    }
+    if ((320 < mouseY) && (mouseY < 380)) {
+      filter = "MOVEMENT";
+    }
+    if ((400 < mouseY) && (mouseY < 460)) {
+      filter = "QUANT";
+    }
+  
   }
 }

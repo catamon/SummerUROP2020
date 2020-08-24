@@ -30,3 +30,30 @@ void controlScreen(){
   
   
 }
+
+void getCenter(String filter){
+  pushMatrix();
+  if (filter == "BRIGHTNESS"){
+    translate (810, 110);
+  }
+   if (filter == "CIRCLES"){
+    translate (810,  190);
+   }
+     if (filter == "CONTOURS"){
+    translate (sqWidth/2,  270);
+  }
+    if (filter == "MOVEMENT"){
+    translate (sqWidth/2,  350);
+  }
+  if (filter == "QUANT"){
+    translate (sqWidth/2,  430);
+  }
+  rectMode(CENTER);
+  fill(35, 60, 128);
+  stroke(255);
+  strokeWeight(2);
+  rect(0, 0, 300,60);
+        fill(255);
+      text(filter, 0,0);
+      popMatrix();
+}
